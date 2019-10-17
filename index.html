@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>boom.fyi - ipfs link shortener</title>
+
+	<meta itemprop="name" content="boom.fyi">
+	<meta itemprop="description" content="Share links to content on IPFS that you can delete">
+	<meta itemprop="image" content="/img/boom.png">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@textileio">
+	<meta name="twitter:title" content="boom.fyi">
+	<meta name="twitter:description" content="IPFS links that you can delete.">
+	<meta name="twitter:creator" content="@textileio">
+	<meta name="twitter:image:src" content="/img/boom.png">
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="boom.fyi - links to content on IPFS that you can delete"/>
+	<meta property="og:type" content="article"/>
+	<meta property="og:url" content="http://www.boom.fyi"/>
+	<meta property="og:image" content="/img/boom.png"/>
+	<meta property="og:description" content="boom.fyi - links to content on IPFS that you can delete"/>
+	<meta property="og:site_name" content="boom.fyi"/>
+	<meta name="msapplication-TileColor" content="#3529ff">
+  <meta name="theme-color" content="#ffffff">
+  
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+  <script src="https://unpkg.com/ipfs/dist/index.min.js"></script>
+
+  <link href="/css/main.css" rel="stylesheet">
+
+</head>
+<body>
+  <div class="splash">
+    <section class="loading">
+      <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-9 col-lg-7 mx-auto">
+                <div class="page-title text-center text-uppercase">
+                    <h1>Exploding links</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-9 col-lg-7 mx-auto ">
+                <div class="card-title text-center">
+                    Single-use, expiring, and secret links for IPFS. A link-shortening service and more built with <a target=_blank href="https://textile.io">Textile</a>.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-9 col-lg-7 mx-auto ">
+            <div class="card my-5 submission">
+              <div class="card-body">
+                <!-- <h5 class="card-title text-center">Choose your file</h5> -->
+                <form class="form-file">
+                  
+                  <div class="required-file">
+                    <div class="form__upload" id="file_drop">
+                      <div class="upload_inner">
+                        <div class="upload_image">
+                          <img class="upload_img" src="img/cloud_upload.png" />
+                        </div>
+                        <div class="upload_title">
+                          Drag & Drop Your File
+                        </div>
+                        <div class="upload_text">
+                          To encrypt, add to IPFS, and generate a 30-minute link (5MB max).
+                        </div>
+                      </div>
+                    </div>
+
+                    <h5 class="form-or text-center">Or use an existing IPFS hash <a class="autofill">(try this hash)</a></h5>
+                    
+                    <div class="form-label-group inputHashDiv">
+                      <input type="text" id="inputHash" class="form-control" placeholder="IPFS Hash">
+                      <label for="inputHash" class="inputHashLabel">IPFS Hash</label>
+                    </div>
+
+                  </div>
+
+                  <div class="file-feedback hidden">
+                      ✓
+                  </div>
+                  
+                  <h5 class="form-or light info text-center">The file you submit will be encrypted and pinned to IPFS. A new hash, encryption key, and exploding link are generated for you.</h5>
+
+                  <hr class="my-4" />
+                  
+                  <h5 class="form-or light text-center">Detonation Settings (optional)</h5>
+
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-label-group">
+                        <input type="number" id="viewLimit" class="form-control" placeholder="Views to Detonate" min="0" max="10000">
+                        <label for="viewLimit">Views (1000)</label>
+                      </div>
+                    </div>
+                    <div class="clearfix visible-xs"></div>
+                    <div class="col-sm-6">
+                      <div class="form-label-group">
+                          <select id="duration" class="form-control" name="duration" placeholder="Time to Detonate">
+                            <option value="" disabled selected hidden>Time (24hr)</option>
+                            <option value="0.5">30 m</option>
+                            <option value="1">1 hr</option>
+                            <option value="2">2 hrs</option>
+                            <option value="6">6 hrs</option>
+                            <option value="24">1 day</option>
+                          </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr class="my-4" />
+                  
+                  <h5 class="form-or light info text-center">Links you create will expire as soon as the first of <i>Views to Detonate</i> or <i>Time to Detonate</i> is reached. The default is 1000 views and 24hrs.</h5>
+
+                  <hr class="my-4" />
+                  
+                  <button class="btn btn-lg btn-submit btn-block text-uppercase disabled" type="submit">Submit</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="card my-5 result hidden">
+
+              <div class="card-body">
+
+                  <div class="card-title text-center text-uppercase">
+                      Your link
+                  </div>
+                  <div class="card-title text-center result-link">
+                    <a target=_blank href="https://boom.fyi/q/khLyA2th1AfxeDOE">boom.fyi/q/khLyA2th1AfxeDOE</a>
+                    <br/>
+                    <div class="copy-result">copy</div>
+                  </div>
+    
+
+                <!-- Detonation Limits -->
+                <h5 class="form-or light info text-center">Your link above will expire as soon as the Views to Detonate or Time to Detonate is reached. Viewers of the above link cannot access any of the information below.</h5>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    
+                    <div class="form-label-group">
+                      <input type="text" id="maxViews" class="form-control" placeholder="Max Views" readonly value="1000 views">
+                      <label for="maxViews">Max Views</label>
+                    </div>
+
+                  </div>
+                  <div class="clearfix visible-xs"></div>
+                  <div class="col-sm-6">
+                    
+                    <div class="form-label-group">
+                      <input type="text" id="maxDuration" class="form-control" placeholder="Max Duration" readonly value="24 hours">
+                      <label for="maxDuration">Max Duration</label>
+                    </div>
+                  </div>
+                </div>
+                
+                  
+                <h5 class="form-or light info text-center">This is the hash and unique encryption key to your file on IPFS. You can pin this hash freely without having to share the key with anyone.</h5>
+
+                <div class="form-label-group">
+                  <input type="text" id="resultHash" class="form-control" placeholder="IPFS Hash" readonly value="12D3KooWDqtAwQBq8Eh6FiCGG2E8Y41MEHGNmEMNbAReUCuubadz">
+                  <label for="resultHash">IPFS Hash</label>
+                </div>
+
+                <div class="form-label-group">
+                  <input type="text" id="resultKey" class="form-control" placeholder="Encryption Key" readonly value="12D3KooWDqtAwQBq8Eh6FiCGG2E8Y41MEHGNmEMNbAReUCuubadz">
+                  <label for="resultKey">Encryption Key</label>
+                </div>
+                  
+                <hr class="my-4" />
+
+                <h5 class="form-or light info text-center">
+                    <a href="/" class="autofill">start over</a>
+                </h5>
+              </div>
+            </div>
+
+            <div class="card my-5 error text-center hidden">
+                I've made a mistake. Maybe try again?
+            </div>
+
+            <hr class="my-4" />
+          </div>
+        </div>     
+        
+        
+
+        <div class="row faq-row">
+            <div class="col-sm-12 col-md-9 col-lg-7 mx-auto">
+              <h3 class="text-center">FAQ</h3>
+                <div class="accordion" id="faq">
+                    <div class="card">
+                        <div class="card-header p-2" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                  How does this work?
+                                </button>
+                              </h5>
+                        </div>
+    
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#faq">
+                            <div class="card-body">
+                                <a href="https://boom.fyi">boom.fyi</a> is built using a <a href="https://docs.textile.io/concepts/cafes/" target=_blank>Textile cafe</a> to store data and interact with IPFS. When you send a file to <a href="https://boom.fyi">boom.fyi</a>, it will be encrypted and added to <a href="https://ipfs.io" target=_blank>IPFS</a>. Next, a random is generated for that content. When someone visits the link, the cafe will fetch the IPFS content, decrypt it, and send it back. In this way, the requester only needs to know the link but never needs to know the hash or key of the content on IPFS. 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header p-2" id="headingTwo">
+                            <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                              What can it do?
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faq">
+                            <div class="card-body">
+                                <a href="https://boom.fyi">boom.fyi</a> is an experiment to show one way that people can store data on IPFS and share it with others without always having to share what the exact content address is. This allows a content owner to pin that content freely across IPFS without the same concerns that others might try to track the content address across the DHT. Of course, it means you need to trust <a href="https://boom.fyi">boom.fyi</a>, but anyone can run this service! <a href="https://slack.textile.io" target=_blank>Get in touch to learn how.</a>. 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header p-2" id="headingThree">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                  What else can it do?
+                                </button>
+                              </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#faq">
+                            <div class="card-body">
+                                <a href="https://boom.fyi">boom.fyi</a> is part of a new system of bots that run on Textile. You can chain bots together into workflows in any way you like. For example, head over to our <a href="https://slack.textile.io" target=_blank>Slack channel</a> and DM @Pinbot a file to see what it does. 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header p-2" id="headingFour">
+                          <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                Can my project use the API?
+                              </button>
+                            </h5>
+                      </div>
+                      <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#faq">
+                          <div class="card-body">
+                              Jump on our <a href="https://slack.textile.io" target=_blank>Slack channel</a> and share what you are thinking and we'll see how we can help.
+                          </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header p-2" id="headingFive">
+                          <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                Why did I get a new hash?
+                              </button>
+                            </h5>
+                      </div>
+                      <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#faq">
+                          <div class="card-body">
+                              Everytime you upload a file (even if it's the same file you previously uploaded), a new and distinct encryption key will be generated to encrypt the file. The resulting blob will then be added to IPFS to live in private obscurity. In this way, you could pin every encrypted book from the Library of Alexandria but never have to tell people which book is which but still share them out to be read.
+                          </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header p-2" id="headingSix">
+                          <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                Can I reuse a key I got from boom.fyi?
+                              </button>
+                            </h5>
+                      </div>
+                      <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#faq">
+                          <div class="card-body">
+                            Sure! Just enter it here before you submit your hash above.
+                            <input type="text" id="privateKey" class="form-control" placeholder="Private Key">
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    window.validating = false;
+    window.needsValidation = undefined;
+    let gateway = "https://boom.fyi/q/"
+    let apiServer = "https://us-west-dev.textile.cafe"
+    // apiServer = "http://127.0.0.1:40601/api/v1"
+    let apiUrl = apiServer + "/bots/id/12D3KooWDqtAwQBq8Eh6FiCGG2E8Y41MEHGNmEMNbAReUCuubadz"
+    // gateway = "http://127.0.0.1:5050/bots/12D3KooWDqtAwQBq8Eh6FiCGG2E8Y41MEHGNmEMNbAReUCuubadz?link="
+    let el = document.querySelector('.loading');
+    let sheet = window.document.styleSheets[0];
+
+    let fileData = undefined;
+    let targetHash = undefined;
+    let uploading = false;
+
+    const successMessage = "✓";
+
+    const uploadFail = (message) => {
+      $('.error').text(message);
+      $('.error').removeClass('hidden');
+      $('.submission').addClass('hidden');
+      $('#inputHash').val("");
+      $("#inputHash").val("")
+      fileData = undefined;
+      targetHash = undefined;
+      uploading = false;
+      disableSubmit();
+      $('#inputHash').removeClass('is-valid');
+      $('#inputHash').addClass('is-invalid');
+      setTimeout(() => {
+        $('.error').addClass('hidden');
+        $('.submission').removeClass('hidden');
+      }, 2000);
+    }
+
+
+    const enableSubmit = (hash) => {
+      $('.btn-submit').removeClass('disabled');
+    }
+
+    const disableSubmit = (hash) => {
+      $('.btn-submit').addClass('disabled');
+    }
+
+    const dropSuccess = (file) => {
+      $('.file-feedback').text(successMessage);
+      $('.file-feedback').removeClass('hidden');
+      $('.required-file').addClass('hidden');
+      enableSubmit();
+      fileData = file;
+    }
+
+    const ipfsCatFile = async (path) => {
+      const data = await window.node.cat(path)
+      return data
+    }
+
+    const validateFile = () => {
+      if (window.validating) {
+        return
+      }
+      window.validating = true;
+      const path = window.needsValidation;
+      window.needsValidation = undefined;
+      if (path === undefined) {
+        window.validating = false;
+        return
+
+      }
+
+      const handleFailedHash = () => {
+        $('#inputHash').removeClass('is-invalid');
+        $('#inputHash').addClass('is-valid');
+        enableSubmit();
+        window.validating = false;
+        validateFile();
+      }
+
+      const to = setTimeout(() => {
+        if (targetHash !== undefined) {
+          handleFailedHash()
+          return;
+        }
+        $('#inputHash').removeClass('is-valid');
+        $('#inputHash').addClass('is-invalid');
+        disableSubmit();
+        window.validating = false;
+        validateFile();
+      }, 8000)
+
+      targetHash = path; 
+
+      ipfsCatFile(path)
+      .then((result) => {
+        clearTimeout(to);
+        fileData = result;
+        $('#inputHash').removeClass('is-invalid');
+        $('#inputHash').addClass('is-valid');
+        enableSubmit();
+        window.validating = false;
+        validateFile();
+      })
+      .catch((err) => {
+        clearTimeout(to);
+        $('#inputHash').removeClass('is-valid');
+        $('#inputHash').addClass('is-invalid');
+        disableSubmit();
+        setTimeout(()=>{
+          window.validating = false;
+          validateFile();
+        }, 300)
+      })
+
+    }
+
+    const postBot = (url, content) => {
+      if (content !== undefined) {
+        let payload = {
+          type: 'POST',
+          crossOrigin: true,
+          processData: false,
+          data: content
+        }
+        return $.ajax(url, payload)
+      } else {
+        return $.post(url)
+      }
+    }
+    
+    const transitionSplash = () => {
+
+      const firstResize = () => {
+        var elHeight = el.clientHeight;
+        var elWidth = el.clientWidth;
+        var xs = window.innerWidth / elWidth + 1;
+        var ys = window.innerHeight / elHeight + 1;
+        var newRule = ".grow { border-radius: 0px !important; transform: scale(" + xs + ", " + ys + ");  }";
+        sheet.insertRule(newRule, sheet.cssRules.length);
+        el.classList.add("grow");
+      }
+      const contentReveal = () => {
+        el.classList.remove("loading");
+        el.classList.remove("grow");
+        el.classList.add("content");
+      }
+      
+      
+      setTimeout(firstResize, 900)
+      setTimeout(contentReveal, 1000)
+      // setTimeout(showTour, 2000)
+    }
+
+    const setupFileDrop = () => {
+      Dropzone.options.fileDrop = {
+        init: () => {},
+        addedfile: () => {},
+        thumbnail: () => {},
+        previewTemplate: "",
+        autoProcessQueue: false,
+        maxThumbnailFilesize: 2,
+        maxFilesize: 5,
+        createImageThumbnails: false,
+      }
+      
+      var dz = new Dropzone("div#file_drop", { url: "/file/post"});
+
+      $('.form__upload').on('click', () => {
+        dz.hiddenFileInput.click();
+      })
+
+      dz.on('addedfile', (file) => {
+          const fileName = file.name;
+          const fileReader = new FileReader();
+          fileReader.onload = () => {
+            dropSuccess(fileReader.result)
+          }   
+          fileReader.onerror = () => {
+            uploadFail('Hmm... file form error.')
+          }
+          fileReader.onabort = () => {
+            uploadFail('Hmm... abort.')
+          }
+          fileReader.readAsArrayBuffer(file);
+      });
+    }
+
+    const uploadFile = (content, hash, limit, duration, key) => {
+      uploading = true;
+      const fileDuration = duration && duration !== undefined ? duration * 3600 : 86400;
+      const viewLimit = limit && limit !== undefined ? limit : 1000
+      $('.feedback').text("Uploading file...")
+      let params = [
+        'duration=' + fileDuration,
+        'limit=' + viewLimit
+      ]
+      if (content === undefined && hash !== undefined) {
+        // just posting a hash
+        params.push(
+          "path=" + hash
+        )
+      } else {
+        // posting a file
+        params.push(
+          "content=true"
+        )
+      }
+      if (key !== undefined && key !== "") {
+        params.push(
+          "key=" + key
+        )
+      }
+
+      let url = apiUrl + "?" + params.join('&') 
+
+      postBot(url, content)
+      .done((result) => {
+        uploading = false;
+        if (typeof result.link !== 'string') {
+          uploadFail("I've made a mistake. Maybe try again?");
+          return;
+        }
+        setTimeout(()=> {
+          $('.submission').addClass('hidden');
+          $('.result').removeClass('hidden');
+
+          $('#resultHash').val(result.hash);
+          $('#resultKey').val(result.key);
+
+          let resultUrl = gateway + result.link
+          $('.result-link a').attr('href', resultUrl);
+          $('.result-link a').text(resultUrl.split('//')[1]);
+
+          $('#maxDuration').val(fileDuration / 3600 + " hours");
+          $('#maxViews').val(viewLimit);
+        }, 300)
+      }).fail(function(xhr, status, error) {
+        // error handling
+        uploading = false;
+        uploadFail("I've made a mistake. Maybe try again?")
+      })
+    }
+
+    const eventListeners = () => {
+
+      $('.autofill').click(function(){
+        const hash = "QmcfJ7FHfjBFD5ga3nLsxvdShcrnqQeEm6vaqByqd6BZMi";
+        $('#inputHash').val(hash);
+        $('#viewLimit').val(3);
+        window.needsValidation = hash;
+        if (validating) {
+          return
+        }
+        validateFile();
+      })
+
+      $("#inputHash").on("change keyup paste", function(){
+        const newVal = $(this).val();
+        if (newVal == window.needsValidation) {
+          return
+        }
+        if (newVal == "") {
+          $('#inputHash').removeClass('is-valid');
+          $('#inputHash').removeClass('is-invalid');
+          return
+        }
+        window.needsValidation = newVal;
+        if (validating) {
+          return
+        }
+        validateFile();
+      });
+
+      $('.form-file').on("submit", function(e) {
+        e.preventDefault();
+        if ($('.btn-submit').hasClass('disabled') || (fileData === undefined && targetHash == undefined) || uploading === true) {
+          $('#inputHash').removeClass('is-valid');
+          $('#inputHash').addClass('is-invalid');
+          return
+        }
+
+        let limit = $('#viewLimit').val();
+        if (!limit) {
+          limit = 1000;
+        }
+        let duration = $('#duration').val();
+        if (!duration) {
+          duration = 24;
+        }
+
+        let key = $('#privateKey').val();
+
+        uploadFile(fileData, targetHash, limit, duration, key)
+      })
+
+
+      $(".copy-result").click(function(){
+        var textArea = document.createElement("textarea");
+        textArea.value = $('.result-link a').attr('href');
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          var successful = document.execCommand('copy');
+        } catch (err) {
+          alert('Oops, unable to copy', err);
+        }
+        document.body.removeChild(textArea);
+      });
+    }
+
+    const clearCritical = () => {
+      fileData = undefined;
+      uploading = undefined;
+      $("#inputHash").val(undefined)
+      $("#privateKey").val(undefined)
+    }
+    document.addEventListener('DOMContentLoaded',async () => {
+      clearCritical();
+      transitionSplash();
+      setupFileDrop();
+      
+      const node = await Ipfs.create({ repo: 'ipfs-' + Math.random() })
+      node.once('ready', () => {
+        console.log('Online status: ', node.isOnline() ? 'online' : 'offline')
+      })
+      window.node = node
+
+      eventListeners();
+
+    })
+  
+  </script>
+</body>
+
+</html>

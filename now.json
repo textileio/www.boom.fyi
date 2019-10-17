@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/**/*.js", "use": "@now/node" },
+    { "src": "public/**", "use": "@now/static" }
+  ],
+  "routes": [
+    {
+      "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
+      },
+      "src": "/api/date.js",
+      "methods": ["POST", "GET"],
+      "dest": "/api/date.js"
+    },
+    {
+      "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
+      },
+      "src": "^/q/(.+)$",
+      "methods": ["GET"],
+      "dest": "/api/date.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
+    },
+    {"src": "^/favicon.ico$", "dest": "/public/img/favicon.ico"},
+    { "handle": "filesystem" },
+    { "src": "/.*", "status": 404, "dest": "/404.html" }
+  ]
+}

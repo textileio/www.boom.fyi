@@ -1,0 +1,37 @@
+.splash {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: url(../img/splash.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center; 
+  background-size: 40vh;
+}
+.loading {
+  position:absolute;
+  top:50%;
+  left:50%;
+  width: 10px;
+  height: 10px;
+  background-position:center center;
+  overflow:hidden;
+  background-color: black;
+  border-radius: 7px;
+  -moz-transition: all .11s;
+  -o-transition: all .11s;
+  -webkit-transition: all .11s;
+  transition: all .11s;
+  div {
+    visibility: hidden;
+  }
+} 
+.content {
+  position:absolute;
+  top:0;
+  left:0;
+  min-height:100vh;
+  min-width:100%;
+  overflow:hidden;
+  background-color: $background;
+}

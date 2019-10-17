@@ -1,0 +1,44 @@
+// Variables
+
+// Set custom colors
+$brandRed: #ff1c3f !default;
+$brandYellow: #ffce00 !default;
+$darkBackground: #000 !default;
+
+$fontPrimaryColor: #000 !default;
+$fontHighlightColor: #FFcecA !default;
+$fontSecondaryColor: #FFF !default;
+
+// Override Bootstrap primary and secondary colors
+$primary: $brandRed !default;
+$secondary: $brandRed !default;
+
+$radius: .2rem;
+$background: #fefefe;
+$fontColor: #373737;
+
+$headings-font-size: 16px;
+$headings-font-weight: 700 !default;
+$subheadings-font-size: 14px;
+$subheadings-line-height: 16px;
+$subheadings-font-weight: 500;
+$regular-font-size: 12px;
+$light-font-weight: 300;
+$heavy-font-weight: 800;
+// $font-family
+// Override Bootstrap font variables
+$font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 'Noto Color Emoji' !default;
+$headings-font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 'Noto Color Emoji' !default;
+
+// Override Bootstrap border variables
+$border-width: 0.125rem !default;
+$border-radius: 0.1rem !default;
+$border-radius-lg: 0.15rem !default;
+$border-radius-sm: 0.05rem !default;
+
+// Override Bootstrap input/button variables
+$input-btn-border-width: $border-width !default;
+
+// Override Bootstrap modal variables
+$modal-inner-padding: 4rem 1rem !default;
+$modal-content-border-width: 0 !default;
