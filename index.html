@@ -58,6 +58,7 @@
             <div class="col-sm-12 col-md-9 col-lg-7 mx-auto ">
                 <div class="card-title text-center">
                     Single-use, expiring, and secret links for IPFS. A link-shortening service and more built with <a target=_blank href="https://textile.io">Textile</a>.
+                    <p><a href="https://blog.textile.io/ipfs-experiments-creating-ipfs-links-that-you-can-delete/" target=_blank>Read the blog post.</a></p>
                 </div>
             </div>
         </div>
@@ -78,7 +79,7 @@
                           Drag & Drop Your File
                         </div>
                         <div class="upload_text">
-                          To encrypt, add to IPFS, and generate a 30-minute link (5MB max).
+                          To encrypt, add to IPFS, and generate a 24-hour link (5MB max).
                         </div>
                       </div>
                     </div>
@@ -106,7 +107,7 @@
                     <div class="col-sm-6">
                       <div class="form-label-group">
                         <input type="number" id="viewLimit" class="form-control" placeholder="Views to Detonate" min="0" max="10000">
-                        <label for="viewLimit">Views (1000)</label>
+                        <label for="viewLimit">Views (default 1000)</label>
                       </div>
                     </div>
                     <div class="clearfix visible-xs"></div>
@@ -119,6 +120,7 @@
                             <option value="2">2 hrs</option>
                             <option value="6">6 hrs</option>
                             <option value="24">1 day</option>
+                            <option value="744">1 month</option>
                           </select>
                       </div>
                     </div>
@@ -206,21 +208,36 @@
             <div class="col-sm-12 col-md-9 col-lg-7 mx-auto">
               <h3 class="text-center">FAQ</h3>
                 <div class="accordion" id="faq">
-                    <div class="card">
-                        <div class="card-header p-2" id="headingOne">
-                            <h5 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                  How does this work?
-                                </button>
-                              </h5>
-                        </div>
-    
-                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#faq">
-                            <div class="card-body">
-                                <a href="https://boom.fyi">boom.fyi</a> is built using a <a href="https://docs.textile.io/concepts/cafes/" target=_blank>Textile cafe</a> to store data and interact with IPFS. When you send a file to <a href="https://boom.fyi">boom.fyi</a>, it will be encrypted and added to <a href="https://ipfs.io" target=_blank>IPFS</a>. Next, a random is generated for that content. When someone visits the link, the cafe will fetch the IPFS content, decrypt it, and send it back. In this way, the requester only needs to know the link but never needs to know the hash or key of the content on IPFS. 
-                            </div>
-                        </div>
-                    </div>
+                  <div class="card">
+                      <div class="card-header p-2" id="headingOne">
+                          <h5 class="mb-0">
+                              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                How does this work?
+                              </button>
+                            </h5>
+                      </div>
+  
+                      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#faq">
+                          <div class="card-body">
+                              <a href="https://boom.fyi">boom.fyi</a> is built using a <a href="https://docs.textile.io/concepts/cafes/" target=_blank>Textile cafe</a> to store data and interact with IPFS. When you send a file to <a href="https://boom.fyi">boom.fyi</a>, it will be encrypted and added to <a href="https://ipfs.io" target=_blank>IPFS</a>. Next, a random is generated for that content. When someone visits the link, the cafe will fetch the IPFS content, decrypt it, and send it back. In this way, the requester only needs to know the link but never needs to know the hash or key of the content on IPFS. 
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card">
+                      <div class="card-header p-2" id="headingOne2">
+                          <h5 class="mb-0">
+                              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">
+                                Will this pin my data to IPFS?
+                              </button>
+                            </h5>
+                      </div>
+  
+                      <div id="collapseOne2" class="collapse" aria-labelledby="headingOne2" data-parent="#faq">
+                          <div class="card-body">
+                            No. It will cache it though. But you can take the content hash (just the hash, not the key) and pin it yourself or using an existing service. You can try IPFS's <a href="https://twitter.com/ipfspin" target=_blank>@Pinbot on Twitter</a>, <a href="https://pinata.cloud" target=_blank>Pinata's API</a>, or talk to <a href="https://slack.textile.io/" target=_blank>@Pinbot on Textile's Slack</a> which also uses Pinata. 
+                          </div>
+                      </div>
+                  </div>
                     <div class="card">
                         <div class="card-header p-2" id="headingTwo">
                             <h5 class="mb-0">
@@ -276,6 +293,21 @@
                               Everytime you upload a file (even if it's the same file you previously uploaded), a new and distinct encryption key will be generated to encrypt the file. The resulting blob will then be added to IPFS to live in private obscurity. In this way, you could pin every encrypted book from the Library of Alexandria but never have to tell people which book is which but still share them out to be read.
                           </div>
                       </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header p-2" id="headingOne3">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="true" aria-controls="collapseOne3">
+                                  Can I generate multiple or new links for the same content?
+                                </button>
+                              </h5>
+                        </div>
+    
+                        <div id="collapseOne3" class="collapse" aria-labelledby="headingOne3" data-parent="#faq">
+                            <div class="card-body">
+                              Yes, exactly! You can generate new links from the same data as many times as you need. You can create a single-use link now... and then another in a week for somebody else. Once you have a hash and key from boom, see the next question for entering your existing encryption key to generate a new link. 
+                            </div>
+                        </div>
                     </div>
                     <div class="card">
                       <div class="card-header p-2" id="headingSix">
@@ -386,7 +418,7 @@
         disableSubmit();
         window.validating = false;
         validateFile();
-      }, 8000)
+      }, 5000)
 
       targetHash = path; 
 

@@ -11,9 +11,9 @@
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
       },
-      "src": "/api/date.js",
+      "src": "/api/plain.js",
       "methods": ["POST", "GET"],
-      "dest": "/api/date.js"
+      "dest": "/api/plain.js"
     },
     {
       "headers": {
@@ -23,7 +23,7 @@
       },
       "src": "^/q/(.+)$",
       "methods": ["GET"],
-      "dest": "/api/date.js"
+      "dest": "/api/plain.js"
     },
     {
       "src": "/(.*)",

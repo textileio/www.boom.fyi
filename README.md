@@ -6,3 +6,10 @@
 > repo for https://boom.fyi/
 
 Join us on our [public Slack channel](https://slack.textile.io/) for news, discussions, and status updates. [Check out our blog](https://blog.textile.io/) for the latest posts and announcements.
+
+
+### dev
+
+```sh
+gulp build
+```
